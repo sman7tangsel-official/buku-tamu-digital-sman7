@@ -65,71 +65,77 @@
 
   </div>
 
-  <script>
-    // URL WEB APP APPS SCRIPT ANDA
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxghCsahvUFv9HBmfwbAOlN4405gaXyHcHv7JUGfWSwXmyXMMhLZuqvRV3lQON9SWV0Xw/exec";
+ <script>
+  // Ganti dengan URL Aplikasi Web baru yang disalin dari langkah di atas
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyp6IOtmLr6WJGHHrIERIK19Wun-GIkayBm8GJgWgzTmqDYHcCtFAZs_CsfuAOCutIg/exec";
 
-    let fotoBase64 = "";
+  let fotoBase64 = "";
 
-    function handleFotoPreview(event) {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          const img = new Image();
-          img.src = e.target.result;
-          img.onload = function() {
-            const canvas = document.createElement('canvas');
-            const MAX_WIDTH = 400;
-            const scaleSize = MAX_WIDTH / img.width;
-            canvas.width = MAX_WIDTH;
-            canvas.height = img.height * scaleSize;
+  function handleFotoPreview(event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.src = e.target.result;
+        img.onload = function() {
+          // Kompresi foto ke dimensi maksimal 400px agar payload kecil
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 400;
+          const scaleSize = MAX_WIDTH / img.width;
+          canvas.width = MAX_WIDTH;
+          canvas.height = img.height * scaleSize;
 
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-            fotoBase64 = canvas.toDataURL('image/jpeg', 0.5);
-            document.getElementById('imgPreview').src = fotoBase64;
-            document.getElementById('previewBox').classList.remove('hidden');
-          };
+          fotoBase64 = canvas.toDataURL('image/jpeg', 0.5);
+          document.getElementById('imgPreview').src = fotoBase64;
+          document.getElementById('previewBox').classList.remove('hidden');
         };
-        reader.readAsDataURL(file);
-      }
+      };
+      reader.readAsDataURL(file);
     }
+  }
 
-    function submitGuestData(e) {
-      e.preventDefault();
-      const btn = document.getElementById('btnSubmit');
-      btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengirim Data...';
+  function submitGuestData(e) {
+    e.preventDefault();
+    const btn = document.getElementById('btnSubmit');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengirim Data...';
 
-      const formData = new URLSearchParams();
-      formData.append('waktu', new Date().toLocaleString('id-ID'));
-      formData.append('nama', document.getElementById('nama').value);
-      formData.append('instansi', document.getElementById('instansi').value);
-      formData.append('tujuan', document.getElementById('tujuan').value);
-      formData.append('keperluan', document.getElementById('keperluan').value);
-      formData.append('foto', fotoBase64);
+    const payload = {
+      waktu: new Date().toLocaleString('id-ID'),
+      nama: document.getElementById('nama').value,
+      instansi: document.getElementById('instansi').value,
+      tujuan: document.getElementById('tujuan').value,
+      keperluan: document.getElementById('keperluan').value,
+      foto: fotoBase64
+    };
 
-      fetch(APPS_SCRIPT_URL, {
-        method: 'POST',
-        body: formData
-      })
-      .then(() => {
-        alert('Terima kasih! Data kunjungan Anda berhasil dikirim.');
-        document.getElementById('guestForm').reset();
-        document.getElementById('previewBox').classList.add('hidden');
-        fotoBase64 = "";
-      })
-      .catch(err => {
-        alert('Gagal mengirim data. Silakan coba lagi!');
-        console.error(err);
-      })
-      .finally(() => {
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Kirim Data Kunjungan';
-      });
-    }
-  </script>
+    fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'text/plain;charset=utf-8'
+      },
+      body: JSON.stringify(payload)
+    })
+    .then(() => {
+      alert('Terima kasih! Data kunjungan Anda berhasil dikirim.');
+      document.getElementById('guestForm').reset();
+      document.getElementById('previewBox').classList.add('hidden');
+      fotoBase64 = "";
+    })
+    .catch(err => {
+      alert('Gagal mengirim data. Silakan coba lagi!');
+      console.error(err);
+    })
+    .finally(() => {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Kirim Data Kunjungan';
+    });
+  }
+</script>
 </body>
 </html>
