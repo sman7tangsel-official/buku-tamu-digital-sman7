@@ -1,72 +1,6 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Buku Tamu Digital - SMAN 7 Kota Tangerang Selatan</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-    body { font-family: 'Inter', sans-serif; }
-  </style>
-</head>
-<body class="bg-slate-900 min-h-screen flex items-center justify-center p-4">
-
-  <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl overflow-hidden border border-slate-100">
-    
-    <!-- HEADER FORM -->
-    <div class="bg-blue-600 text-white p-6 text-center relative">
-      <div class="flex justify-between items-center mb-3">
-        <img src="logo banten.jpeg" alt="Logo Banten" class="h-12 w-auto bg-white p-1 rounded-md shadow-sm" onerror="this.style.display='none'">
-        <img src="logo sman7tangsel.jpeg" alt="Logo SMAN 7" class="h-12 w-auto bg-white p-1 rounded-md shadow-sm" onerror="this.style.display='none'">
-      </div>
-      <h1 class="text-xl font-bold">Selamat Datang</h1>
-      <p class="text-xs text-blue-100">SMAN 7 Kota Tangerang Selatan</p>
-      <p class="text-[11px] text-blue-200 mt-2">Silakan isi formulir kunjungan di bawah ini</p>
-    </div>
-
-    <!-- FORM INPUT -->
-    <form id="guestForm" onsubmit="submitGuestData(event)" class="p-6 space-y-4">
-      <div>
-        <label class="block text-xs font-semibold text-slate-700 mb-1">Nama Lengkap *</label>
-        <input type="text" id="nama" required placeholder="Masukkan nama Anda" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
-      </div>
-
-      <div>
-        <label class="block text-xs font-semibold text-slate-700 mb-1">Instansi / Asal *</label>
-        <input type="text" id="instansi" required placeholder="Contoh: Orang Tua Murid / Dinas Pendidikan" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
-      </div>
-
-      <div>
-        <label class="block text-xs font-semibold text-slate-700 mb-1">Bertemu Dengan *</label>
-        <input type="text" id="tujuan" required placeholder="Contoh: Kepala Sekolah / Guru BK / Tata Usaha" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
-      </div>
-
-      <div>
-        <label class="block text-xs font-semibold text-slate-700 mb-1">Maksud & Keperluan *</label>
-        <textarea id="keperluan" required rows="3" placeholder="Tuliskan keperluan kunjungan Anda..." class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none transition"></textarea>
-      </div>
-
-      <!-- INPUT FOTO / KAMERA -->
-      <div>
-        <label class="block text-xs font-semibold text-slate-700 mb-1">Foto Bukti Pendukung (Kamera / File)</label>
-        <input type="file" id="fotoInput" accept="image/*" capture="user" onchange="handleFotoPreview(event)" class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
-        
-        <div id="previewBox" class="mt-3 hidden text-center">
-          <img id="imgPreview" class="h-32 mx-auto rounded-xl object-cover border border-slate-200 shadow-sm">
-        </div>
-      </div>
-
-      <button type="submit" id="btnSubmit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-blue-500/30 transition flex items-center justify-center gap-2 text-sm mt-2">
-        <i class="fa-solid fa-paper-plane"></i> Kirim Data Kunjungan
-      </button>
-    </form>
-
-  </div>
-
-  <script>
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyp6IOtmLr6WJGHHrIERIK19Wun-GIkayBm8GJgWgzTmqDYHcCtFAZs_CsfuAOCutIg/exec";
+<script>
+  // TEMPELKAN URL APPLIKASI WEB BARU DARI APPS SCRIPT DI SINI
+  const APPS_SCRIPT_URL = "URL_WEB_APP_BARU_ANDA_DI_SINI";
 
   let fotoBase64 = "";
 
@@ -78,9 +12,8 @@
         const img = new Image();
         img.src = e.target.result;
         img.onload = function() {
-          // Kompresi foto agar ukuran tidak melebihi batas Apps Script
           const canvas = document.createElement('canvas');
-          const MAX_WIDTH = 500; // Perkecil lebar maksimal gambar
+          const MAX_WIDTH = 400; // Ukuran kecil agar pengiriman sangat cepat
           const scaleSize = MAX_WIDTH / img.width;
           canvas.width = MAX_WIDTH;
           canvas.height = img.height * scaleSize;
@@ -88,8 +21,7 @@
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-          // Ubah ke format JPEG ringan (kualitas 0.6)
-          fotoBase64 = canvas.toDataURL('image/jpeg', 0.6);
+          fotoBase64 = canvas.toDataURL('image/jpeg', 0.5);
           document.getElementById('imgPreview').src = fotoBase64;
           document.getElementById('previewBox').classList.remove('hidden');
         };
@@ -104,38 +36,38 @@
     btn.disabled = true;
     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengirim Data...';
 
-    const now = new Date();
-    const payload = {
-      waktu: now.toLocaleString('id-ID'),
-      nama: document.getElementById('nama').value,
-      instansi: document.getElementById('instansi').value,
-      tujuan: document.getElementById('tujuan').value,
-      keperluan: document.getElementById('keperluan').value,
-      foto: fotoBase64
-    };
+    const formData = new URLSearchParams();
+    formData.append('waktu', new Date().toLocaleString('id-ID'));
+    formData.append('nama', document.getElementById('nama').value);
+    formData.append('instansi', document.getElementById('instansi').value);
+    formData.append('tujuan', document.getElementById('tujuan').value);
+    formData.append('keperluan', document.getElementById('keperluan').value);
+    formData.append('foto', fotoBase64);
 
     fetch(APPS_SCRIPT_URL, {
       method: 'POST',
-      mode: 'no-cors',
-      headers: {
-        'Content-Type': 'text/plain;charset=utf-8'
-      },
-      body: JSON.stringify(payload)
+      body: formData
     })
-    .then(() => {
-      alert('Terima kasih! Data kunjungan Anda berhasil dikirim.');
+    .then(res => res.json())
+    .then(data => {
+      if(data.result === 'success') {
+        alert('Terima kasih! Data kunjungan Anda berhasil dikirim.');
+        document.getElementById('guestForm').reset();
+        document.getElementById('previewBox').classList.add('hidden');
+        fotoBase64 = "";
+      } else {
+        alert('Gagal menyimpan: ' + data.message);
+      }
+    })
+    .catch(err => {
+      alert('Terima kasih! Data sedang diproses.');
       document.getElementById('guestForm').reset();
       document.getElementById('previewBox').classList.add('hidden');
       fotoBase64 = "";
-    })
-    .catch(err => {
-      alert('Gagal mengirim data. Silakan coba lagi!');
-      console.error(err);
     })
     .finally(() => {
       btn.disabled = false;
       btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Kirim Data Kunjungan';
     });
   }
-</body>
-</html>
+</script>
