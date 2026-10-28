@@ -65,9 +65,9 @@
 
   </div>
 
- <script>
-  // Tempelkan URL Web App Baru yang disalin dari Langkah 1
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyMUzsrjrGxsfGgUaX08nQby2KiDAb3rIdDy5-2fab1O8HZygiAzKOJR_-FODph9FRG8g/exec";
+<script>
+  // URL Web App Apps Script Anda
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyp6IOtmLr6WJGHHrIERIK19Wun-GIkayBm8GJgWgzTmqDYHcCtFAZs_CsfuAOCutIg/exec";
 
   let fotoBase64 = "";
 
@@ -79,7 +79,7 @@
         const img = new Image();
         img.src = e.target.result;
         img.onload = function() {
-          // Kompresi ketat lebar max 300px agar payload sangat ringan untuk HP/Perangkat lain
+          // Kompresi khusus kamera HP: kecilkan ukuran ke max 300px & kualitas 0.3
           const canvas = document.createElement('canvas');
           const MAX_WIDTH = 300;
           const scaleSize = MAX_WIDTH / img.width;
@@ -89,7 +89,8 @@
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-          fotoBase64 = canvas.toDataURL('image/jpeg', 0.4);
+          // Hasil teks foto menjadi sangat ringan sehingga lancar dikirim via HP
+          fotoBase64 = canvas.toDataURL('image/jpeg', 0.3);
           document.getElementById('imgPreview').src = fotoBase64;
           document.getElementById('previewBox').classList.remove('hidden');
         };
@@ -104,17 +105,22 @@
     btn.disabled = true;
     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengirim Data...';
 
-    const formData = new URLSearchParams();
-    formData.append('waktu', new Date().toLocaleString('id-ID'));
-    formData.append('nama', document.getElementById('nama').value);
-    formData.append('instansi', document.getElementById('instansi').value);
-    formData.append('tujuan', document.getElementById('tujuan').value);
-    formData.append('keperluan', document.getElementById('keperluan').value);
-    formData.append('foto', fotoBase64);
+    const payload = {
+      waktu: new Date().toLocaleString('id-ID'),
+      nama: document.getElementById('nama').value,
+      instansi: document.getElementById('instansi').value,
+      tujuan: document.getElementById('tujuan').value,
+      keperluan: document.getElementById('keperluan').value,
+      foto: fotoBase64
+    };
 
     fetch(APPS_SCRIPT_URL, {
       method: 'POST',
-      body: formData
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'text/plain;charset=utf-8'
+      },
+      body: JSON.stringify(payload)
     })
     .then(() => {
       alert('Terima kasih! Data kunjungan Anda berhasil dikirim.');
@@ -123,7 +129,7 @@
       fotoBase64 = "";
     })
     .catch(err => {
-      alert('Gagal mengirim data. Periksa koneksi internet Anda!');
+      alert('Gagal mengirim data. Silakan coba lagi!');
       console.error(err);
     })
     .finally(() => {
@@ -131,7 +137,6 @@
       btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Kirim Data Kunjungan';
     });
   }
-</script>
 </script>
 </body>
 </html>
