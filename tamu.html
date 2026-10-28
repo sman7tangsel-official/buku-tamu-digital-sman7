@@ -135,7 +135,7 @@ function renderTabel(dataTamu) {
     if (!dataTamu || dataTamu.length === 0) {
         tbody.innerHTML = `
             <tr>
-                <td colspan="5" class="p-8 text-center text-slate-400">Belum ada data kunjungan.</td>
+               <td colspan="6" class="p-8 text-center text-slate-400">Belum ada data kunjungan.</td>
             </tr>
         `;
         return;
@@ -145,12 +145,17 @@ function renderTabel(dataTamu) {
     dataTamu.forEach(item => {
         html += `
             <tr class="border-b hover:bg-slate-50 transition">
-                <td class="p-3 text-slate-500 font-mono text-xs">${formatWaktuWIB(item.waktu)}</td>
-                <td class="p-3 font-medium text-slate-800">${item.nama || '-'}</td>
-                <td class="p-3 text-slate-600">${item.instansi || '-'}</td>
-                <td class="p-3 text-slate-600">${item.tujuan || '-'}</td>
-                <td class="p-3 text-slate-600">${item.keperluan || '-'}</td>
-            </tr>
+  <td class="p-3 text-slate-500 font-mono text-xs">${formatWaktuWIB(item.waktu)}</td>
+  <td class="p-3 font-medium text-slate-800">${item.nama || '-'}</td>
+  <td class="p-3 text-slate-600">${item.instansi || '-'}</td>
+  <td class="p-3 text-slate-600">${item.tujuan || '-'}</td>
+  <td class="p-3 text-slate-600">${item.keperluan || '-'}</td>
+  <td class="p-3 text-center">
+    ${item.foto && item.foto.length > 20 
+      ? `<a href="${item.foto}" target="_blank" class="bg-blue-100 text-blue-700 px-3 py-1 rounded-lg text-xs font-semibold hover:bg-blue-200 inline-flex items-center gap-1"><i class="fa-solid fa-image"></i> Lihat Foto</a>` 
+      : `<span class="text-slate-400 text-xs">-</span>`}
+  </td>
+</tr>
         `;
     });
     tbody.innerHTML = html;
